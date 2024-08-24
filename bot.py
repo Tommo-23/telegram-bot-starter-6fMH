@@ -3,7 +3,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
 # Token del bot
-TOKEN = "7514576903:AAH9eTd__xqhey_jnzwP1pLl0DTYgtckODw"
+TOKEN = os.getenv("TOKEN")
 
 # Canale di destinazione per l'inoltro dei messaggi
 CHAT_DESTINAZIONE = "@TuttoModding"
