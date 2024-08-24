@@ -1,16 +1,15 @@
 [tool.poetry]
 name = "telegram-bot-starter"
 version = "0.1.0"
-description = ""
+description = "A Telegram bot that forwards messages from monitored channels to a destination channel."
 authors = ["fauzaanu <fauzaangasim@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-python-telegram-bot = "^20.3"
+python-telegram-bot = { version = "^20.3", extras = ["webhooks"] }
 python-dotenv = "^1.0.1"
 
-
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

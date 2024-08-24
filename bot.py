@@ -9,7 +9,7 @@ TOKEN = "7514576903:AAH9eTd__xqhey_jnzwP1pLl0DTYgtckODw"
 CHAT_DESTINAZIONE = "@TuttoModding"
 
 # Lista di chat pubbliche da cui inoltrare i messaggi
-CHAT_MONITORATE = ["@setupTommo23"]  # Sostituisci con i tuoi canali pubblici
+CHAT_MONITORATE = ["@setupTommo23"]
 
 async def start(update: Update, context: CallbackContext) -> None:
     """Risponde al comando /start."""
