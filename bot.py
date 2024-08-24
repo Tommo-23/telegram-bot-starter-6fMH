@@ -8,23 +8,30 @@ TOKEN = "7514576903:AAH9eTd__xqhey_jnzwP1pLl0DTYgtckODw"
 # Canale di destinazione per l'inoltro dei messaggi
 CHAT_DESTINAZIONE = "@TuttoModding"
 
+# Lista di chat pubbliche da cui inoltrare i messaggi
+CHAT_MONITORATE = ["@prova55559"]  # Sostituisci con i tuoi canali pubblici
+
 async def start(update: Update, context: CallbackContext) -> None:
     """Risponde al comando /start."""
-    await update.message.reply_text('my job is to forward all messages to the specified channel.')
+    await update.message.reply_text('I am here to forward messages from monitored channels to the destination channel.')
 
 async def inoltra_messaggio(update: Update, context: CallbackContext) -> None:
-    """Inoltra tutti i messaggi al canale di destinazione e logga dettagli."""
+    """Inoltra messaggi da chat monitorate a chat di destinazione."""
     if update.message:
         chat = update.message.chat
         chat_username = chat.username if chat.username else 'N/A'
         message_text = update.message.text if update.message.text else 'No text'
+        
         print(f"Ricevuto messaggio da: {chat_username}")
         print(f"Dettagli del messaggio: {update.message.to_dict()}")
 
-        # Costruisci il testo del messaggio da inoltrare
-        testo_inoltrato = f"Messaggio da {chat_username}:\n\n{message_text}"
-        await context.bot.send_message(chat_id=CHAT_DESTINAZIONE, text=testo_inoltrato)
-        print(f"Inoltrato messaggio: {testo_inoltrato}")
+        if chat_username in CHAT_MONITORATE:
+            # Costruisci il testo del messaggio da inoltrare
+            testo_inoltrato = f"Messaggio da {chat_username}:\n\n{message_text}"
+            await context.bot.send_message(chat_id=CHAT_DESTINAZIONE, text=testo_inoltrato)
+            print(f"Inoltrato messaggio: {testo_inoltrato}")
+        else:
+            print("Il messaggio non proviene da una chat monitorata.")
     else:
         print("L'aggiornamento ricevuto non contiene un messaggio valido.")
 
@@ -34,7 +41,7 @@ def main() -> None:
 
     # Aggiungi i gestori di comandi e messaggi
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(MessageHandler(filters.ALL, inoltra_messaggio))
+    application.add_handler(MessageHandler(filters.ChatType.CHANNEL & filters.TEXT, inoltra_messaggio))
 
     # Esegui l'applicazione utilizzando il metodo di polling o webhook
     if os.getenv("USE_WEBHOOK") == "True":
