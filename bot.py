@@ -3,7 +3,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
 # Token del bot
-TOKEN = os.getenv("7514576903:AAH9eTd__xqhey_jnzwP1pLl0DTYgtckODw")
+TOKEN = "7514576903:AAH9eTd__xqhey_jnzwP1pLl0DTYgtckODw"
 
 # Canale di destinazione per l'inoltro dei messaggi
 CHAT_DESTINAZIONE = "@TuttoModding"
@@ -23,7 +23,6 @@ async def start(update: Update, context: CallbackContext) -> None:
 async def inoltra_messaggio(update: Update, context: CallbackContext) -> None:
     """Inoltra il messaggio se proviene da un canale monitorato e logga dettagli."""
     if update.message:
-        # Logga informazioni dettagliate per il debug
         chat_username = update.message.chat.username
         message_text = update.message.text
         print(f"Ricevuto messaggio da: {chat_username}")
@@ -47,14 +46,15 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.ChatType.CHANNEL, inoltra_messaggio))
 
+    # Esegui l'applicazione utilizzando il metodo di polling o webhook
+    if os.getenv("USE_WEBHOOK") == "True":
         application.run_webhook(
             listen="0.0.0.0",
             port=int(os.environ.get("PORT", 8443)),
             url_path=TOKEN,
-            webhook_url=f"https://{os.getenv('telegram-bot-starter-production-f0c4.up.railway.app')}/{7514576903:AAH9eTd__xqhey_jnzwP1pLl0DTYgtckODw}",
+            webhook_url="https://telegram-bot-starter-production-f0c4.up.railway.app/" + TOKEN,
         )
     else:
-        # Usa il Polling
         application.run_polling()
 
 if __name__ == '__main__':
