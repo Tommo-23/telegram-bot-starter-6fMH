@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-python-telegram-bot = "^20.7"
+python-telegram-bot = "^20.3"
 python-dotenv = "^1.0.1"
 
 
