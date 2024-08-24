@@ -6,13 +6,13 @@ from telegram.error import NetworkError
 
 TOKEN = os.getenv("TOKEN")
 
-CHAT_DESTINAZIONE = "@TuttoModding"  # Canale di destinazione
+CHAT_DESTINAZIONE = "https://t.me/TuttoModding"  # Canale di destinazione
 
 CANALI_MONITORATI = {
     '@garnet_updates': 'rn13pro5g / PocoX6',
     '@PocoF6GlobalUpdate': 'POCO F6',
     '@Redmi10CUpdates': 'Redmi 10c',    
-    '@setupTommo23': 'test',    
+    'https://t.me/setupTommo23': 'test',    
 }
 
 async def start(update: Update, context: CallbackContext) -> None:
@@ -39,3 +39,15 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+
+async def inoltra_messaggio(update: Update, context: CallbackContext) -> None:
+    if update.message and update.message.chat.username:
+        canale = update.message.chat.username
+        print(f"Messaggio ricevuto da: {canale}")
+        if canale in CANALI_MONITORATI:
+            await update.message.forward(chat_id=CHAT_DESTINAZIONE)
+        else:
+            print(f"Il canale {canale} non è monitorato.")
+    else:
+        print("L'aggiornamento ricevuto non contiene un messaggio valido.")
+
