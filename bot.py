@@ -3,7 +3,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
 # Token del bot
-TOKEN = os.getenv("TOKEN")
+TOKEN = os.getenv("7514576903:AAH9eTd__xqhey_jnzwP1pLl0DTYgtckODw")
 
 # Canale di destinazione per l'inoltro dei messaggi
 CHAT_DESTINAZIONE = "@TuttoModding"
@@ -21,11 +21,23 @@ async def start(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text('my job is to forward the new roms of your device.')
 
 async def inoltra_messaggio(update: Update, context: CallbackContext) -> None:
-    """Inoltra il messaggio se proviene da un canale monitorato."""
-    if update.message and update.message.chat.username in CANALI_MONITORATI:
-        await update.message.forward(chat_id=CHAT_DESTINAZIONE)
+    """Inoltra il messaggio se proviene da un canale monitorato e logga dettagli."""
+    if update.message:
+        # Logga informazioni dettagliate per il debug
+        chat_username = update.message.chat.username
+        message_text = update.message.text
+        print(f"Ricevuto messaggio da: {chat_username}")
+        print(f"Dettagli del messaggio: {update.message.to_dict()}")
+
+        if chat_username in CANALI_MONITORATI:
+            nome_canale = CANALI_MONITORATI[chat_username]
+            testo_inoltrato = f"Nuova ROM per {nome_canale}\n\n{message_text}"
+            await context.bot.send_message(chat_id=CHAT_DESTINAZIONE, text=testo_inoltrato)
+            print(f"Inoltrato messaggio: {testo_inoltrato}")
+        else:
+            print("L'aggiornamento ricevuto non proviene da un canale monitorato.")
     else:
-        print("L'aggiornamento ricevuto non proviene da un canale monitorato.")
+        print("L'aggiornamento ricevuto non contiene un messaggio valido.")
 
 def main() -> None:
     # Configura l'applicazione
@@ -35,9 +47,6 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.ChatType.CHANNEL, inoltra_messaggio))
 
-    # Usa il metodo di esecuzione a seconda delle necessità
-    if os.getenv("USE_WEBHOOK") == "True":
-        # Configura i Webhook
         application.run_webhook(
             listen="0.0.0.0",
             port=int(os.environ.get("PORT", 8443)),
