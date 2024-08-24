@@ -9,7 +9,7 @@ TOKEN = "7514576903:AAH9eTd__xqhey_jnzwP1pLl0DTYgtckODw"
 CHAT_DESTINAZIONE = "@TuttoModding"
 
 # Lista di chat pubbliche da cui inoltrare i messaggi
-CHAT_MONITORATE = ["@prova55559"]  # Sostituisci con i tuoi canali pubblici
+CHAT_MONITORATE = ["@setupTommo23"]  # Sostituisci con i tuoi canali pubblici
 
 async def start(update: Update, context: CallbackContext) -> None:
     """Risponde al comando /start."""
@@ -43,16 +43,13 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.ChatType.CHANNEL & filters.TEXT, inoltra_messaggio))
 
-    # Esegui l'applicazione utilizzando il metodo di polling o webhook
-    if os.getenv("USE_WEBHOOK") == "True":
-        application.run_webhook(
-            listen="0.0.0.0",
-            port=int(os.environ.get("PORT", 8443)),
-            url_path=TOKEN,
-            webhook_url=f"https://telegram-bot-starter-production-f0c4.up.railway.app/{TOKEN}",
-        )
-    else:
-        application.run_polling()
+    # Usa il Webhook
+    application.run_webhook(
+        listen="0.0.0.0",
+        port=int(os.environ.get("PORT", 8443)),
+        url_path=TOKEN,
+        webhook_url=f"https://telegram-bot-starter-production-f0c4.up.railway.app/{TOKEN}",
+    )
 
 if __name__ == '__main__':
     main()
